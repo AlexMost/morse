@@ -29,10 +29,6 @@ function enlargeSpan(span) {
 
 export var moveSpans = () => {
     return (state) => {
-        if !(state.get("spans").length) {
-            return state
-        }
-        
         if (state.get("signalOn")) {
             var js_spans = state.get("spans")
             var [firstSpan, ...others] = js_spans
