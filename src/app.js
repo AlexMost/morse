@@ -11,7 +11,8 @@ var {MorseState} = require('./state')
 function getViewState(state, eventStream) {
     return {
         eventStream: eventStream,
-        spans: state.get("spans")
+        spans: state.get("spans"),
+        words: state.get("words")
     }
 }
 

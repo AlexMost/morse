@@ -26,12 +26,19 @@ class MainView extends React.Component {
     }
 
     render() {
-        return button(
-            {
-                onMouseDown: this.onSignalOn,
-                onMouseUp: this.onSignalOff
-            },
-            "Signal");
+        return div(null,
+            div(null,
+                this.props.words.map((word, key) => {
+                    return span({key}, word.join(""))
+                })),
+            div(null, 
+                button(
+                    {
+                        onMouseDown: this.onSignalOn,
+                        onMouseUp: this.onSignalOff
+                    },
+                "Signal"))
+        )
     }
 }
 

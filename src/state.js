@@ -2,10 +2,10 @@
 
 var {Record, List, fromJS} = require('immutable');
 
-
 export var MorseState = Record({
     spans: [],
-    signalOn: false
+    signalOn: false,
+    words: [[]]
 })
 
 const INTERVAL = 5
@@ -48,5 +48,13 @@ export var addSpan = () => {
         var spans = state.get("spans")
         spans.unshift(newSpan)
         return state.set("spans", spans)
+    }
+}
+
+export var addLetterToLastWord = (letter) => {
+    return (state) => {
+        var [word, ...other] = state.get("words")
+        word.push(letter)
+        return state.set("words", [word].concat(other))
     }
 }
