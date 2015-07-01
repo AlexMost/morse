@@ -1,7 +1,7 @@
 "use strict;"
 
 var Rx = require('rx');
-var {addSpan, moveSpans, signalOff, addLetterToLastWord} = require("./state");
+var {addSpan, moveSpans, signalOff, addLetterToLastWord, addNewWord} = require("./state");
 var morse = require('morse');
 
 
@@ -42,11 +42,22 @@ function getSignalActions(eventStream) {
     var letterWhitespaces = whiteSpaces.filter((v) => {
         return v >= LETTER_SPAN && v < WORD_SPAN})
 
+    var wordsWhitespaces = letterWhitespaces.flatMap((span) => {
+        let ms = WORD_SPAN - span
+        return Rx.Observable
+            .return(ms)
+            .delay(ms)
+            .first()
+            .takeUntil(signalStarts)
+    })
+
     var letters = dotsAndLines.buffer(letterWhitespaces)
+
+    var words = letters.buffer(wordsWhitespaces)
 
     return {
         signalStarts, signalEnds, 
-        signalTimeSpans, dotsStream, lineStream, letters
+        signalTimeSpans, dotsStream, lineStream, letters, words
     }
 }
 
@@ -55,7 +66,7 @@ function dispatchActions(eventStream) {
     var {
         signalStarts, signalEnds, 
         signalTimeSpans, dotsStream, lineStream,
-        letters
+        letters, words
     } = getSignalActions(eventStream)   
 
     var drawingLoop = Rx.Observable.interval(50).map(() => moveSpans())
@@ -66,12 +77,18 @@ function dispatchActions(eventStream) {
 
     var lettersLog = letters.map((codes) => {
         var letter = morse.decode(codes.join(""))
-        console.log("letter", letter)
+        console.log("letter", codes.join(""))
         return addLetterToLastWord(letter)
-    })        
+    })
+
+    var wordsLog = words.map((letters) => {
+        console.log("word", letters.map((l) => l.join("")));
+        return addNewWord()
+    })
 
     return Rx.Observable.merge(
-        drawingLoop, addSpans, signalOffs, lettersLog)
+        drawingLoop, addSpans, signalOffs, lettersLog, 
+        wordsLog)
 }
 
 

@@ -29,7 +29,9 @@ class MainView extends React.Component {
         return div(null,
             div(null,
                 this.props.words.map((word, key) => {
-                    return span({key}, word.join(""))
+                    return span(
+                        {key, style: {marginRight: "10px"}}, 
+                        word.join(""))
                 })),
             div(null, 
                 button(

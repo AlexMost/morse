@@ -58,3 +58,11 @@ export var addLetterToLastWord = (letter) => {
         return state.set("words", [word].concat(other))
     }
 }
+
+export var addNewWord = (word) => {
+    return (state) => {
+        var words = state.get("words")
+        words.unshift([])
+        return state.set("words", words)   
+    }
+}

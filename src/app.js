@@ -12,7 +12,7 @@ function getViewState(state, eventStream) {
     return {
         eventStream: eventStream,
         spans: state.get("spans"),
-        words: state.get("words")
+        words: state.get("words").filter((w) => w.length)
     }
 }
 
