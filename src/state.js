@@ -53,16 +53,16 @@ export var addSpan = () => {
 
 export var addLetterToLastWord = (letter) => {
     return (state) => {
-        var [word, ...other] = state.get("words")
-        word.push(letter)
-        return state.set("words", [word].concat(other))
+        var words = state.get("words")
+        words[words.length-1].push(letter)
+        return state.set("words", words)
     }
 }
 
 export var addNewWord = (word) => {
     return (state) => {
         var words = state.get("words")
-        words.unshift([])
+        words.push([])
         return state.set("words", words)   
     }
 }
