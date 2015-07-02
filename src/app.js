@@ -22,13 +22,12 @@ function getViewState(state, eventStream) {
 
 function listenDocumentSpacePress(eventStream) {
     var spaceKeyDowns = Rx.DOM.keydown(document).filter((ev) => ev.keyCode == 32)
-    .map(() => "signal_start")
+        .map(() => "signal_start")
 
     var spaceKeyUps = Rx.DOM.keyup(document).filter((ev) => ev.keyCode == 32)
-    .map(() => "signal_end")
+        .map(() => "signal_end")
     
-    Rx.Observable.merge(spaceKeyDowns, spaceKeyUps)
-    .distinctUntilChanged().subscribe((action) => {
+    Rx.Observable.merge(spaceKeyDowns, spaceKeyUps).distinctUntilChanged().subscribe((action) => {
         eventStream.onNext({action})
     })
 }

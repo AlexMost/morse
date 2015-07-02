@@ -14,10 +14,10 @@ const WORD_SPAN = SPAN * 7
 
 function getSignalActions(eventStream) {
     var signalStarts = eventStream
-    .filter(({action}) => action === "signal_start").timestamp()
+        .filter(({action}) => action === "signal_start").timestamp()
 
     var signalEnds = eventStream
-    .filter(({action}) => action === "signal_end").timestamp()
+        .filter(({action}) => action === "signal_end").timestamp()
 
     var signalTimeSpans = signalStarts.flatMap((startArgs) => {
         return signalEnds.map((endArgs) => {
@@ -32,8 +32,7 @@ function getSignalActions(eventStream) {
 
     var whiteSpaces = signalEnds.flatMap((endArgs) => {
         let timeout = Rx.Observable.return(LETTER_SPAN).delay(LETTER_SPAN)
-        let starts = signalStarts
-        .map((startArgs) => startArgs.timestamp - endArgs.timestamp)
+        let starts = signalStarts.map((startArgs) => startArgs.timestamp - endArgs.timestamp)
         return Rx.Observable.merge(timeout, starts).first()
     })
 
