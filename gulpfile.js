@@ -44,6 +44,6 @@ gulp.task('default', ['browser']);
 
 gulp.task('watch', function(){gulp.watch(src, ['default'])});
 
-gulp.task('deploy', function(){
+gulp.task('deploy', ['default'], function(){
     return gulp.src("./**/*").pipe(deploy())
 });
