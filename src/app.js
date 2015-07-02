@@ -19,11 +19,6 @@ function getViewState(state, eventStream) {
     }
 }
 
-function onlyIfChanged(oldState, newState) {
-    if (oldState && newState) {
-        return oldState !== newState
-    }
-}
 
 function listenDocumentSpacePress(eventStream) {
     var spaceKeyDowns = Rx.DOM.keydown(document).filter((ev) => ev.keyCode == 32)
