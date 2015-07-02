@@ -5,6 +5,7 @@ var del = require('del');
 var babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
 var sourcemaps = require('gulp-sourcemaps');
+var deploy = require('gulp-gh-pages');
 
 var entry = 'index.js';
 var src = [ entry, 'src/**/*.js' ];
@@ -42,3 +43,7 @@ gulp.task('browser', ['clean'], function () {
 gulp.task('default', ['browser']);
 
 gulp.task('watch', function(){gulp.watch(src, ['default'])});
+
+gulp.task('deploy', ['default'], function(){
+    return gulp.src("./**/*").pipe(deploy())
+});
