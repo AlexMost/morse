@@ -36,8 +36,7 @@ class MainView extends React.Component {
             action: "signal_end"
         })
     }
-    //
-    // <div class="round-button"><div class="round-button-circle"><a href="http://example.com" class="round-button">Button!!</a></div></div
+    
     render() {
         return div(null,
             div({className: "decoded"},
@@ -45,7 +44,8 @@ class MainView extends React.Component {
                     return span(
                         {key, style: {marginRight: "10px"}}, 
                         word.join(""))
-                })),
+                }),
+                this.props.islisteningForLetter && img({src: this.props.loadingImg}) || null),
             div({className: "h-center"}, 
                 React.createElement(
                     RoundButton,

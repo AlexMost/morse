@@ -3,7 +3,8 @@
 var Rx = require('rx');
 var {addSpan, moveSpans, signalOff, 
     addLetterToLastWord, addNewWord, setCatImg, 
-    setSOSImg} = require("./state");
+    setSOSImg, setIsListeningForLetter, 
+    unsetIsListeningForLetter} = require("./state");
 var morse = require('morse');
 
 
@@ -51,7 +52,7 @@ function getSignalActions(eventStream) {
 
     return {
         signalStarts, signalEnds, 
-        signalTimeSpans, dotsStream, lineStream, lettersStream, wordsStream
+        signalTimeSpans, dotsStream, lineStream, lettersStream, wordsStream, letterWhitespaces
     }
 }
 
@@ -60,13 +61,17 @@ function dispatchActions(eventStream) {
     var {
         signalStarts, signalEnds, 
         signalTimeSpans, dotsStream, lineStream,
-        lettersStream, wordsStream
+        lettersStream, wordsStream, letterWhitespaces
     } = getSignalActions(eventStream)   
 
     // canvas drawing
     var drawingLoop = Rx.Observable.interval(50).map(moveSpans)
     var addSpans = signalStarts.map(addSpan)
     var endSpans = signalEnds.map(signalOff)
+
+    //letter spinner
+    var showSpinner = signalStarts.map(setIsListeningForLetter)
+    var hideSpinner = letterWhitespaces.map(unsetIsListeningForLetter)
 
     // letters and words processing
     var addLetterToLasWordStream = lettersStream.map(addLetterToLastWord)
@@ -76,7 +81,7 @@ function dispatchActions(eventStream) {
 
     return Rx.Observable.merge(
         drawingLoop, addSpans, endSpans, addLetterToLasWordStream, 
-        addNewWordStream, setCatImgStream, setSOSImgStream)
+        addNewWordStream, setCatImgStream, setSOSImgStream, showSpinner, hideSpinner)
 }
 
 

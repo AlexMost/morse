@@ -15,7 +15,9 @@ function getViewState(state, eventStream) {
         spans: state.get("spans"),
         words: state.get("words").filter((w) => w.length),
         img: state.get("img"),
-        signalOn: state.get("signalOn")
+        signalOn: state.get("signalOn"),
+        islisteningForLetter: state.get("islisteningForLetter"),
+        loadingImg: state.get("loadingImg")
     }
 }
 
