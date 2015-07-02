@@ -7,13 +7,18 @@ const INTERVAL = 5
 const MORSE_IMG = "./public/MorseCode.png"
 const CAT_IMG = "./public/cat.jpg"
 const SOS_IMG = "./public/sos.jpg"
+const LOADING_IMG = "./public/ajax-loader.gif"
+
 
 export var MorseState = Record({
     spans: [],
     signalOn: false,
     words: [[]],
-    img: MORSE_IMG
+    img: MORSE_IMG,
+    islisteningForLetter: false,
+    loadingImg: LOADING_IMG
 })
+
 
 export var signalOn = () => (state) => state.set("signalOn", true)
 
@@ -32,6 +37,7 @@ function enlargeSpan(span) {
     return span
 }
 
+
 export var moveSpans = () => {
     return (state) => {
         if (state.get("signalOn")) {
@@ -46,6 +52,7 @@ export var moveSpans = () => {
     }
 }
 
+
 export var addSpan = () => {
     return (state) => {
         var state = state.set("signalOn", true)
@@ -56,6 +63,7 @@ export var addSpan = () => {
     }
 }
 
+
 export var addLetterToLastWord = (letter) => {
     return (state) => {
         var words = state.get("words")
@@ -63,6 +71,7 @@ export var addLetterToLastWord = (letter) => {
         return state.set("words", words)
     }
 }
+
 
 export var addNewWord = (word) => {
     return (state) => {
@@ -72,12 +81,24 @@ export var addNewWord = (word) => {
     }
 }
 
+
 export var setCatImg = () => {
     return (state) => {
         return state.set("img", CAT_IMG)
     }
 }
 
+
 export var setSOSImg = () => {
     return (state) => state.set("img", SOS_IMG)
+}
+
+
+export var setIsListeningForLetter = () => {
+    return (state) => state.set("islisteningForLetter", true)
+}
+
+
+export var unsetIsListeningForLetter = () => {
+    return (state) => state.set("islisteningForLetter", false)
 }

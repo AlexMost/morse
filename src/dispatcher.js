@@ -3,7 +3,8 @@
 var Rx = require('rx');
 var {addSpan, moveSpans, signalOff, 
     addLetterToLastWord, addNewWord, setCatImg, 
-    setSOSImg} = require("./state");
+    setSOSImg, setIsListeningForLetter, 
+    unsetIsListeningForLetter} = require("./state");
 var morse = require('morse');
 
 
@@ -14,10 +15,10 @@ const WORD_SPAN = SPAN * 7
 
 function getSignalActions(eventStream) {
     var signalStarts = eventStream
-        .filter(({action}) => action === "signal_start").timestamp()
+    .filter(({action}) => action === "signal_start").timestamp()
 
     var signalEnds = eventStream
-        .filter(({action}) => action === "signal_end").timestamp()
+    .filter(({action}) => action === "signal_end").timestamp()
 
     var signalTimeSpans = signalStarts.flatMap((startArgs) => {
         return signalEnds.map((endArgs) => {
@@ -32,7 +33,8 @@ function getSignalActions(eventStream) {
 
     var whiteSpaces = signalEnds.flatMap((endArgs) => {
         let timeout = Rx.Observable.return(LETTER_SPAN).delay(LETTER_SPAN)
-        let starts = signalStarts.map((startArgs) => startArgs.timestamp - endArgs.timestamp)
+        let starts = signalStarts
+        .map((startArgs) => startArgs.timestamp - endArgs.timestamp)
         return Rx.Observable.merge(timeout, starts).first()
     })
 
@@ -50,7 +52,7 @@ function getSignalActions(eventStream) {
 
     return {
         signalStarts, signalEnds, 
-        signalTimeSpans, dotsStream, lineStream, lettersStream, wordsStream
+        signalTimeSpans, dotsStream, lineStream, lettersStream, wordsStream, letterWhitespaces
     }
 }
 
@@ -59,13 +61,17 @@ function dispatchActions(eventStream) {
     var {
         signalStarts, signalEnds, 
         signalTimeSpans, dotsStream, lineStream,
-        lettersStream, wordsStream
+        lettersStream, wordsStream, letterWhitespaces
     } = getSignalActions(eventStream)   
 
     // canvas drawing
     var drawingLoop = Rx.Observable.interval(50).map(moveSpans)
     var addSpans = signalStarts.map(addSpan)
     var endSpans = signalEnds.map(signalOff)
+
+    //letter spinner
+    var showSpinner = signalStarts.map(setIsListeningForLetter)
+    var hideSpinner = letterWhitespaces.map(unsetIsListeningForLetter)
 
     // letters and words processing
     var addLetterToLasWordStream = lettersStream.map(addLetterToLastWord)
@@ -75,7 +81,7 @@ function dispatchActions(eventStream) {
 
     return Rx.Observable.merge(
         drawingLoop, addSpans, endSpans, addLetterToLasWordStream, 
-        addNewWordStream, setCatImgStream, setSOSImgStream)
+        addNewWordStream, setCatImgStream, setSOSImgStream, showSpinner, hideSpinner)
 }
 
 
