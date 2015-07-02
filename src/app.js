@@ -12,7 +12,8 @@ function getViewState(state, eventStream) {
     return {
         eventStream: eventStream,
         spans: state.get("spans"),
-        words: state.get("words").filter((w) => w.length)
+        words: state.get("words").filter((w) => w.length),
+        img: state.get("img")
     }
 }
 

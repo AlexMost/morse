@@ -2,13 +2,17 @@
 
 var {Record, List, fromJS} = require('immutable');
 
+const INTERVAL = 5
+
+const MORSE_IMG = "./public/MorseCode.png"
+const CAT_IMG = "./public/cat.jpg"
+
 export var MorseState = Record({
     spans: [],
     signalOn: false,
-    words: [[]]
+    words: [[]],
+    img: MORSE_IMG
 })
-
-const INTERVAL = 5
 
 export var signalOn = () => (state) => state.set("signalOn", true)
 
@@ -64,5 +68,11 @@ export var addNewWord = (word) => {
         var words = state.get("words")
         words.push([])
         return state.set("words", words)   
+    }
+}
+
+export var setCatImg = () => {
+    return (state) => {
+        return state.set("img", CAT_IMG)
     }
 }

@@ -1,7 +1,7 @@
 "use strict;"
 
 var React = require('react');
-var {div, span, button, a} = React.DOM;
+var {div, span, button, a, img} = React.DOM;
 
 class RoundButton extends React.Component {
     render() {
@@ -52,7 +52,9 @@ class MainView extends React.Component {
                     {
                         onMouseDown: this.onSignalOn,
                         onMouseUp: this.onSignalOff
-                    }))
+                    })),
+            div({className: "h-center h-mt-20"},
+                img({src: this.props.img}))
         )
     }
 }

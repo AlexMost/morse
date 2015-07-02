@@ -24,7 +24,6 @@ h1 {
     padding-top: 20px;
     font-size: 30px;
     font-weight: bold;
-    margin-top: 30px;
     color: black;
     margin-bottom: 30px;
 }
@@ -88,4 +87,8 @@ h1 {
 
 .h-center {
     text-align: center;
+}
+
+.h-mt-20 {
+    margin-top: 20px;
 }
