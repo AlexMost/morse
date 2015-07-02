@@ -59,6 +59,24 @@ h1 {
     color: white;
 }
 
+.round-button-circle-active {
+    width: 100%;
+    height:0;
+    padding-bottom: 100%;
+    border-radius: 50%;
+    overflow:hidden;
+    box-shadow: 0 0 3px gray;
+    background:red;
+    border:10px solid red;
+}
+
+.round-button-active {
+    width:70px;
+    cursor: pointer;
+    margin: auto;   
+    color: white!important;
+}
+
 .round-button a {
     display:block;
     float:left;

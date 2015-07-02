@@ -10,7 +10,8 @@
     "immutable": "^3.7.4",
     "morse": "^0.1.0",
     "react": "^0.13.3",
-    "rx": "^2.5.3"
+    "rx": "^2.5.3",
+    "rx-dom": "^6.0.0"
   },
   "devDependencies": {
     "babel-core": "^5.3.1",

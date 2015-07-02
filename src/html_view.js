@@ -6,8 +6,8 @@ var {div, span, button, a, img} = React.DOM;
 class RoundButton extends React.Component {
     render() {
         return div({className: "round-button"},
-            div({className: "round-button-circle"},
-                a({className: "round-button noselect",
+            div({className: this.props.signalOn && "round-button-circle-active" || "round-button-circle"},
+                a({className: this.props.signalOn && "round-button-active noselect" || "round-button noselect",
                    onMouseDown: this.props.onMouseDown,
                    onMouseUp: this.props.onMouseUp},
                    "Signal"))
@@ -51,7 +51,8 @@ class MainView extends React.Component {
                     RoundButton,
                     {
                         onMouseDown: this.onSignalOn,
-                        onMouseUp: this.onSignalOff
+                        onMouseUp: this.onSignalOff,
+                        signalOn: this.props.signalOn
                     })),
             div({className: "h-center h-mt-20"},
                 img({src: this.props.img}))

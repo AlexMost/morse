@@ -20,7 +20,10 @@ function getSignalActions(eventStream) {
     .filter(({action}) => action === "signal_end").timestamp()
 
     var signalTimeSpans = signalStarts.flatMap((startArgs) => {
-        return signalEnds.map((endArgs) => endArgs.timestamp - startArgs.timestamp).first()
+        return signalEnds.map((endArgs) => {
+            console.log(endArgs.timestamp - startArgs.timestamp);
+            return endArgs.timestamp - startArgs.timestamp
+        }).first()
     })
 
     var dotsStream = signalTimeSpans.filter((v) => v <= SPAN).map(() => ".")
@@ -32,7 +35,7 @@ function getSignalActions(eventStream) {
         let starts = signalStarts
         .map((startArgs) => startArgs.timestamp - endArgs.timestamp)
         return Rx.Observable.merge(timeout, starts).first()
-    });
+    })
 
     var letterWhitespaces = whiteSpaces.filter((v) => v >= LETTER_SPAN && v < WORD_SPAN)
 
@@ -42,9 +45,9 @@ function getSignalActions(eventStream) {
     })
 
     var letterCodes = dotsAndLines.buffer(letterWhitespaces)
-    var lettersStream = letterCodes.map((codes) => morse.decode(codes.join("")))
+    var lettersStream = letterCodes.map((codes) => morse.decode(codes.join(""))).share()
 
-    var wordsStream = lettersStream.buffer(wordsWhitespaces).map((w) => w.join(""))
+    var wordsStream = lettersStream.buffer(wordsWhitespaces).map((w) => w.join("")).share()
 
     return {
         signalStarts, signalEnds, 
