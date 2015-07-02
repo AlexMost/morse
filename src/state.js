@@ -6,6 +6,7 @@ const INTERVAL = 5
 
 const MORSE_IMG = "./public/MorseCode.png"
 const CAT_IMG = "./public/cat.jpg"
+const SOS_IMG = "./public/sos.jpg"
 
 export var MorseState = Record({
     spans: [],
@@ -75,4 +76,8 @@ export var setCatImg = () => {
     return (state) => {
         return state.set("img", CAT_IMG)
     }
+}
+
+export var setSOSImg = () => {
+    return (state) => state.set("img", SOS_IMG)
 }

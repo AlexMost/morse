@@ -2,7 +2,8 @@
 
 var Rx = require('rx');
 var {addSpan, moveSpans, signalOff, 
-    addLetterToLastWord, addNewWord, setCatImg} = require("./state");
+    addLetterToLastWord, addNewWord, setCatImg, 
+    setSOSImg} = require("./state");
 var morse = require('morse');
 
 
@@ -68,10 +69,11 @@ function dispatchActions(eventStream) {
     var addLetterToLasWordStream = lettersStream.map(addLetterToLastWord)
     var addNewWordStream = wordsStream.map(addNewWord)
     var setCatImgStream = wordsStream.filter((word) => word == "CAT").map(setCatImg)
+    var setSOSImgStream = wordsStream.filter((word) => word == "SOS").map(setSOSImg)
 
     return Rx.Observable.merge(
         drawingLoop, addSpans, endSpans, addLetterToLasWordStream, 
-        addNewWordStream, setCatImgStream)
+        addNewWordStream, setCatImgStream, setSOSImgStream)
 }
 
 
