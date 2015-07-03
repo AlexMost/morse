@@ -1,6 +1,6 @@
 "use strict;"
 
-var {Record, List, fromJS} = require('immutable');
+import {Record, List, fromJS} from 'immutable';
 
 const INTERVAL = 5
 
@@ -13,9 +13,11 @@ const LOADING_IMG = "./public/ajax-loader.gif"
 export var MorseState = Record({
     spans: [],
     signalOn: false,
-    words: [[]],
+    words: List(),
+    currentLetters: List(),
     img: MORSE_IMG,
     islisteningForLetter: false,
+    islisteningForWord: false,
     loadingImg: LOADING_IMG
 })
 
@@ -64,20 +66,21 @@ export var addSpan = () => {
 }
 
 
-export var addLetterToLastWord = (letter) => {
+export var addToCurrentLetters = (letter) => {
     return (state) => {
-        var words = state.get("words")
-        words[words.length-1].push(letter)
-        return state.set("words", words)
+        return state.set(
+            "currentLetters",
+            state.get("currentLetters").push(letter))
     }
 }
 
 
 export var addNewWord = (word) => {
     return (state) => {
-        var words = state.get("words")
-        words.push([])
-        return state.set("words", words)   
+        return state
+            .set("currentLetters", List())
+            .set("words",state.get("words").push(word)
+        )   
     }
 }
 
@@ -101,4 +104,14 @@ export var setIsListeningForLetter = () => {
 
 export var unsetIsListeningForLetter = () => {
     return (state) => state.set("islisteningForLetter", false)
+}
+
+
+export var setIsListeningForWord = () => {
+    return (state) => state.set("islisteningForWord", true)
+}
+
+
+export var unsetIsListeningForWord = () => {
+    return (state) => state.set("islisteningForWord", false)
 }

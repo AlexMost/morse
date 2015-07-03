@@ -1,11 +1,12 @@
 "use strict;"
 
-var Rx = require('rx');
-var {addSpan, moveSpans, signalOff, 
-    addLetterToLastWord, addNewWord, setCatImg, 
+import Rx from 'rx';
+import {addSpan, moveSpans, signalOff, 
+    addToCurrentLetters, addNewWord, setCatImg, 
     setSOSImg, setIsListeningForLetter, 
-    unsetIsListeningForLetter} = require("./state");
-var morse = require('morse');
+    unsetIsListeningForLetter, setIsListeningForWord,
+    unsetIsListeningForWord} from "./state";
+import morse from 'morse';
 
 
 const SPAN = 400
@@ -69,19 +70,25 @@ function dispatchActions(eventStream) {
     var addSpans = signalStarts.map(addSpan)
     var endSpans = signalEnds.map(signalOff)
 
-    //letter spinner
-    var showSpinner = signalStarts.map(setIsListeningForLetter)
-    var hideSpinner = letterWhitespaces.map(unsetIsListeningForLetter)
+    // letter spinner
+    var showWordSpinner = signalStarts.map(setIsListeningForLetter)
+    var hideWordSpinner = letterWhitespaces.map(unsetIsListeningForLetter)
+
+    // sentense spinner
+    var showSentenseSpinner = signalStarts.map(setIsListeningForWord)
+    var hideSentenseSpinner = wordsStream.map(unsetIsListeningForWord)
 
     // letters and words processing
-    var addLetterToLasWordStream = lettersStream.map(addLetterToLastWord)
+    var addLetterToLasWordStream = lettersStream.map(addToCurrentLetters)
     var addNewWordStream = wordsStream.map(addNewWord)
     var setCatImgStream = wordsStream.filter((word) => word == "CAT").map(setCatImg)
     var setSOSImgStream = wordsStream.filter((word) => word == "SOS").map(setSOSImg)
 
     return Rx.Observable.merge(
         drawingLoop, addSpans, endSpans, addLetterToLasWordStream, 
-        addNewWordStream, setCatImgStream, setSOSImgStream, showSpinner, hideSpinner)
+        addNewWordStream, setCatImgStream, setSOSImgStream, 
+        showWordSpinner, hideWordSpinner, showSentenseSpinner,
+        hideSentenseSpinner)
 }
 
 

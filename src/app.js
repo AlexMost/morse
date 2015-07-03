@@ -1,12 +1,11 @@
 "use strict;"
 
-var Rx = require('rx');
-var RxDOM = require('rx-dom');
-var React = require('react');
-var MainView = require('./html_view');
-var dispatchActions = require('./dispatcher');
-var CanvasView = require('./canvas_view');
-var {MorseState} = require('./state')
+import Rx from 'rx';
+import React from 'react';
+import MainView from './html_view';
+import dispatchActions from './dispatcher';
+import CanvasView from './canvas_view';
+import {MorseState} from './state';
 
 
 function getViewState(state, eventStream) {
@@ -17,16 +16,20 @@ function getViewState(state, eventStream) {
         img: state.get("img"),
         signalOn: state.get("signalOn"),
         islisteningForLetter: state.get("islisteningForLetter"),
-        loadingImg: state.get("loadingImg")
+        islisteningForWord: state.get("islisteningForWord"),
+        loadingImg: state.get("loadingImg"),
+        currentLetters: state.get("currentLetters").toArray().join("")
     }
 }
 
 
 function listenDocumentSpacePress(eventStream) {
-    var spaceKeyDowns = Rx.DOM.keydown(document).filter((ev) => ev.keyCode == 32)
+    var spaceKeyDowns = Rx.Observable.fromEvent(document, 'keydown')
+    .filter((ev) => ev.keyCode == 32)
     .map(() => "signal_start")
 
-    var spaceKeyUps = Rx.DOM.keyup(document).filter((ev) => ev.keyCode == 32)
+    var spaceKeyUps = Rx.Observable.fromEvent(document, 'keyup')
+    .filter((ev) => ev.keyCode == 32)
     .map(() => "signal_end")
     
     Rx.Observable.merge(spaceKeyDowns, spaceKeyUps)

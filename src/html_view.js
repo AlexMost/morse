@@ -1,7 +1,8 @@
 "use strict;"
 
-var React = require('react');
+import React from 'react';
 var {div, span, button, a, img} = React.DOM;
+
 
 class RoundButton extends React.Component {
     render() {
@@ -39,13 +40,18 @@ class MainView extends React.Component {
     
     render() {
         return div(null,
+            div(null, "Sentense"),
             div({className: "decoded"},
                 this.props.words.map((word, key) => {
-                    return span(
-                        {key, style: {marginRight: "10px"}}, 
-                        word.join(""))
+                    return span({key, style: {marginRight: "10px"}}, word)    
                 }),
+                this.props.islisteningForWord && img({src: this.props.loadingImg}) || null),
+
+            div(null, "Current word"),
+            div({className: "decoded"},
+                span({style: {marginRight: "10px"}}, this.props.currentLetters),
                 this.props.islisteningForLetter && img({src: this.props.loadingImg}) || null),
+
             div({className: "h-center"}, 
                 React.createElement(
                     RoundButton,
@@ -54,6 +60,7 @@ class MainView extends React.Component {
                         onMouseUp: this.onSignalOff,
                         signalOn: this.props.signalOn
                     })),
+
             div({className: "h-center h-mt-20"},
                 img({src: this.props.img}))
         )
