@@ -40,7 +40,7 @@ class MainView extends React.Component {
     
     render() {
         return div(null,
-            div(null, "Sentense"),
+            div(null, "Sentence"),
             div({className: "decoded"},
                 this.props.words.map((word, key) => {
                     return span({key, style: {marginRight: "10px"}}, word)    
