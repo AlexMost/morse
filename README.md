@@ -1,5 +1,5 @@
 ## Morse test
-This project aims to highlight the power of FRP approach for building UI (Rx.js lib). 
+This project aims to highlight the power of FRP approach for working with async logic (Rx.js lib). 
 ### [http://alexmost.github.io/morse/](http://alexmost.github.io/morse/)
 
 ## Some tech details
