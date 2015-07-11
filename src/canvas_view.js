@@ -7,11 +7,13 @@ class CanvasView {
     }
 
     render(props) {
+
         this.ctx.fillStyle = "#FFF"
         this.ctx.fillRect(0, 0, this.width, this.height);
         this.ctx.fillStyle = "#000"
         props.spans.map((span) => {
-                this.ctx.fillRect(span.offset, 10, span.width, 5)
+                var x = this.width - (span.offset + span.width)
+                this.ctx.fillRect(x, 10, span.width, 5)
             });
     }
 }
