@@ -4,9 +4,8 @@ var gulp = require('gulp');
 var del = require('del');
 var babel = require('gulp-babel');
 var browserify = require('gulp-browserify');
-var sourcemaps = require('gulp-sourcemaps');
 var deploy = require('gulp-gh-pages');
-
+var uglify = require('gulp-uglify');
 var entry = 'index.js';
 var src = [ entry, 'src/**/*.js' ];
 var srcOption = { base: './' };
@@ -19,31 +18,34 @@ gulp.task('clean', function () {
 
 
 gulp.task('node', ['clean'], function () {
-    return gulp.src(src, srcOption)
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '..' }))
-        .pipe(gulp.dest(dest));
+    return gulp.src(src, srcOption).pipe(babel()).pipe(gulp.dest(dest));
 });
 
 
 gulp.task('browser', ['clean'], function () {
     return gulp.src(entry, srcOption)
-        .pipe(sourcemaps.init())
         .pipe(browserify({
             insertGlobals : true,
             debug : !gulp.env.production,
             transform: ['babelify']
         }))
-        .pipe(sourcemaps.write('.', { includeContent: false, sourceRoot: '..' }))
         .pipe(gulp.dest(dest));
 });
 
+gulp.task('browser-deploy', ['clean'], function () {
+    return gulp.src(entry, srcOption)
+        .pipe(browserify({
+            insertGlobals : true,
+            debug : !gulp.env.production,
+            transform: ['babelify']}))
+        .pipe(uglify())
+        .pipe(gulp.dest(dest));
+});
 
 gulp.task('default', ['browser']);
 
 gulp.task('watch', function(){gulp.watch(src, ['default'])});
 
-gulp.task('deploy', ['default'], function(){
+gulp.task('deploy', ['browser-deploy'], function(){
     return gulp.src("./**/*").pipe(deploy())
 });
