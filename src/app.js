@@ -26,11 +26,17 @@ function getViewState(state, eventStream) {
 function listenDocumentSpacePress(eventStream) {
     var spaceKeyDowns = Rx.Observable.fromEvent(document, 'keydown')
     .filter((ev) => ev.keyCode === 32)
-    .map(() => "signal_start")
+    .map((ev) => {
+        ev.preventDefault()
+        return "signal_start"
+    })
 
     var spaceKeyUps = Rx.Observable.fromEvent(document, 'keyup')
     .filter((ev) => ev.keyCode === 32)
-    .map(() => "signal_end")
+    .map((ev) => {
+        ev.preventDefault()
+        return "signal_end"
+    })
     
     Rx.Observable.merge(spaceKeyDowns, spaceKeyUps)
     .distinctUntilChanged().subscribe((action) => {
